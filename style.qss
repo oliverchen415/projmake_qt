@@ -21,3 +21,7 @@ QGroupBox {
 QCheckBox {
     color: #EEEEEE;
 }
+
+QMessageBox QLabel{
+    color: #EEEEEE;
+}
