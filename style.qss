@@ -1,0 +1,23 @@
+QWidget {
+    background-color: #222831;
+}
+
+QPushButton {
+    background-color: #00adb5;
+}
+
+QLineEdit {
+    background-color: #EEEEEE;
+}
+
+QRadioButton {
+    color: #EEEEEE;
+}
+
+QGroupBox {
+    color: #EEEEEE;
+}
+
+QCheckBox {
+    color: #EEEEEE;
+}

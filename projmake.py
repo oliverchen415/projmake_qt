@@ -2,7 +2,7 @@ import sys
 import os
 from pathlib import Path
 from datetime import date
-from PySide6.QtWidgets import QApplication, QFileDialog, QGroupBox, QHBoxLayout, QLineEdit, QMessageBox, QRadioButton, QVBoxLayout, QWidget, QPushButton
+from PySide6.QtWidgets import QApplication, QCheckBox, QFileDialog, QGroupBox, QHBoxLayout, QLineEdit, QMessageBox, QRadioButton, QVBoxLayout, QWidget, QPushButton
 from PySide6.QtCore import Slot
 
 class Maker(QWidget):
@@ -17,17 +17,23 @@ class Maker(QWidget):
         self.projName.setPlaceholderText("Your project name here...")
         self.makeButton = QPushButton("Create Project")
         self.fileSearchButton = QPushButton("...")
+        self.fileSearchButton.setToolTip("Search for a directory for your project")
 
         self.goProj = QRadioButton("Go Project")
+        self.goProj.setToolTip("You will still need a go.mod file")
         self.pyProj = QRadioButton("Python Project")
+        self.versionControlFiles = QCheckBox("Create README.md and .gitignore?")
+        self.versionControlFiles.setToolTip("Creates the files used in online version control, such as Github")
         self.pyProj.setChecked(True)
+        self.versionControlFiles.setChecked(True)
 
         projSelect = QGroupBox("Project Selection")
-        radioButtons = QVBoxLayout()
-        radioButtons.addWidget(self.pyProj)
-        radioButtons.addWidget(self.goProj)
-        radioButtons.stretch(1)
-        projSelect.setLayout(radioButtons)
+        projectOptions = QVBoxLayout()
+        projectOptions.addWidget(self.pyProj)
+        projectOptions.addWidget(self.goProj)
+        projectOptions.addWidget(self.versionControlFiles)
+        projectOptions.stretch(1)
+        projSelect.setLayout(projectOptions)
 
         searchLayout = QHBoxLayout()
         searchLayout.addWidget(self.userFilepath)
@@ -47,7 +53,7 @@ class Maker(QWidget):
 
     @Slot()
     def onClickFileSearch(self):
-        fileSearch = QFileDialog.getExistingDirectory(self, "...", "C:/Users")
+        fileSearch = QFileDialog.getExistingDirectory(self, "Select a Directory...", "C:/Users")
         self.userFilepath.setText(fileSearch)
 
     @Slot()
@@ -67,10 +73,18 @@ class Maker(QWidget):
                 fileType = "go"
             with open (f"{self.projName.text()}.{fileType}", "w") as f:
                 f.write(f"# Created on {date.today()}")
+            if self.versionControlFiles.isChecked():
+                open("README.md", "a").close()
+                open(".gitignore", "a").close()
 
 if __name__ == "__main__":
     app = QApplication([])
     maker = Maker()
     maker.resize(400, 100)
     maker.show()
+
+    with open("style.qss", "r") as f:
+        _style = f.read()
+        app.setStyleSheet(_style)
+
     sys.exit(app.exec())
